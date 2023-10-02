@@ -3,6 +3,7 @@ import xml.etree.ElementTree as ET
 
 class ESLReader:
     """ """
+
     def __init__(self, filename):
         self.tree = ET.parse(filename)
         self.root = self.tree.getroot()
