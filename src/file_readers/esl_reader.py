@@ -2,16 +2,19 @@ import xml.etree.ElementTree as ET
 
 
 class ESLReader:
+    """ """
     def __init__(self, filename):
         self.tree = ET.parse(filename)
         self.root = self.tree.getroot()
 
     def get_interval(self):
+        """ """
         startTime = self.root.find(".//TimePeriod").attrib["end"]
         endTime = self.root.find(".//Header").attrib["created"]
         return f"Starting Time:\n{startTime}\nEnd Time:\n{endTime}"
 
     def get_values(self):
+        """ """
         values = []
         bunch = self.root.find(".//TimePeriod")
         for child in bunch:
