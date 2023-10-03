@@ -26,8 +26,8 @@ For the Modul 306 in BZZ. It allows Energieagentur Bünzli to efficiently manage
 
 ## Technologies Used
 - Python
-- GUI: tkinter
-- Graph: matplotlib
+- GUI: Dear PyGui
+- Graph: Dear PyGui
 
 ## License
 This project is licensed under the MIT License.
