@@ -40,7 +40,7 @@ class Visualizer:
         export_options = ['CSV', 'JSON', 'Hochladen']
         StringVar().set('CSV')
         export_dropdown = tk.OptionMenu(header, StringVar(), *export_options)
-        export_dropdown.config(height=50, bg='#cccccc', width=len(max(export_options, key=len)))
+        export_dropdown.config(height=50, bg='#cccccc', width=len(max(export_options, key=len))) # https://www.tutorialspoint.com/how-to-make-an-optionmenu-maintain-the-same-width-using-tkinter
         export_dropdown.place(relx=0.05, rely=0.5, anchor="center", height=50)
 
         date_text = tk.Label(header, text="Datum:", bg="#f9f9f9", font=("Arial", 20))
