@@ -38,9 +38,12 @@ class Visualizer:
         """
         header = tk.Canvas(root, width=1200, height=75, bg="#f9f9f9", highlightthickness=0)
         header.place(x=0, y=0)
-        export_btn = tk.Button(header, text="Exportieren", width=10, bg="#cccccc", highlightthickness=0,
-                               highlightbackground="#e9e9e9", borderwidth=0, font=("Arial", 13))
-        export_btn.place(relx=0.05, rely=0.5, anchor="center", height=50)
+
+        export_dropdown = ttk.Combobox(header, values=["CSV", "JSON", "Hochladen"], width=10, font=("Arial", 13), state="readonly")
+        export_dropdown.place(relx=0.05, rely=0.5, height=50, anchor="center")
+        export_dropdown.set("CSV")
+
+        # Date Section
         date_text = tk.Label(header, text="Datum:", bg="#f9f9f9", font=("Arial", 20))
         date_text.place(relx=0.16, rely=0.5, anchor="center")
         start_date_year = ttk.Combobox(header, values=["2019", "2020", "2021", "2022"], width=4, font=("Arial", 13),
@@ -69,6 +72,8 @@ class Visualizer:
                                     state="readonly")
         end_date_day.place(relx=0.46, rely=0.5, height=50, anchor="center")
         end_date_day.set("12")
+
+        # Legend Section
         legend_text = tk.Label(header, text="Legende:", bg="#f9f9f9", font=("Arial", 20))
         legend_text.place(relx=0.55, rely=0.5, anchor="center")
         blue_box = tk.Canvas(header, width=20, height=20, bg="#0000ff", highlightthickness=0)
@@ -79,10 +84,17 @@ class Visualizer:
         red_box.place(relx=0.62, rely=0.7, anchor="center")
         red_text = tk.Label(header, text="Produzierter Strom", bg="#f9f9f9", font=("Arial", 13))
         red_text.place(relx=0.7, rely=0.7, anchor="center")
+
+        # Diagram Section
         diagram_dropdown = ttk.Combobox(header, values=["Verbrauchsdiagramm", "Zählerstandsdiagramm"], width=20,
                                         font=("Arial", 13), state="readonly")
         diagram_dropdown.place(relx=0.87, rely=0.5, height=50, anchor="center")
+
+        # Check Dates
         self.check_dates(start_date_day, start_date_month, start_date_year, end_date_day, end_date_month, end_date_year)
+
+
+
 
     def body(self, root):
         """
