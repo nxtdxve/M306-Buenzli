@@ -1,25 +1,30 @@
-# main.py
+# Data Processors
+from data_processors.sdat_processor import SDATProcessor
+from data_processors.esl_processor import ESLProcessor
 
-from data_processors.sdat_processor import SDATProcessor  # Importieren Sie SDATProcessor aus dem data_processors-Ordner
-import matplotlib.pyplot as plt
+# Visualizers
+from visualizers.consumption_visualizer import ConsumptionVisualizer
+from visualizers.meter_visualizer import MeterVisualizer
 
-def plot_data(data):
-    plt.figure(figsize=(14, 6))
-    plt.plot(data.index, data['Consumption'], label='Consumption')
-    plt.plot(data.index, data['Production'], label='Production')
-    plt.xlabel('Timestamp')
-    plt.ylabel('Volume')
-    plt.title('Consumption and Production Over Time')
-    plt.legend()
-    plt.show()
+# Exporters
+from exporters.csv_exporter import CSVExporter
+from exporters.json_exporter import JSONExporter
+from exporters.http_exporter import HTTPExporter
 
 if __name__ == '__main__':
-    # Erstellen Sie eine Instanz von SDATProcessor und verarbeiten Sie die Dateien
-    processor = SDATProcessor('./data/SDAT-Files/')  # Pfad könnte je nach Struktur unterschiedlich sein
-    processor.process_files()
-    
-    # Daten für das Plotting abrufen
-    data_for_plotting = processor.get_data_for_plotting()
+    # Processing ESL files
+    esl_processor = ESLProcessor('./data/ESL-Files/')
+    esl_processor.process_files()
+    esl_data = esl_processor.get_data_for_plotting()
 
-    # Daten plotten
-    plot_data(data_for_plotting)
+    # Exporting ESL data to CSV
+    esl_csv_exporter = CSVExporter(esl_data, "./output/csv/")
+    esl_csv_exporter.export()
+
+    # Exporting ESL data to JSON
+    esl_json_exporter = JSONExporter(esl_data, "./output/json/")
+    esl_json_exporter.export()
+
+    # Exporting ESL data to an HTTP server
+    http_exporter = HTTPExporter(esl_data, "https://api.npoint.io/bf1d2bef297f90b39861")
+    http_exporter.export()
