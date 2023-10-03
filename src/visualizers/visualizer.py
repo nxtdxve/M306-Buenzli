@@ -5,9 +5,7 @@ from tkinter import ttk
 
 
 class Visualizer:
-    """
-    Visualizer class
-    """
+    """Visualizer class"""
 
     def __init__(self):
         """
@@ -17,13 +15,12 @@ class Visualizer:
         self.open_gui(root)
 
     def open_gui(self, root):
-        """
-        Opens the GUI
+        """Opens the GUI
 
         :param root: The root window
         :type root: tk.Tk
+        :returns: None
 
-        :return: None
         """
         root.title("M306-Buenzli")
         root.geometry("1200x675")
@@ -33,8 +30,10 @@ class Visualizer:
         root.mainloop()
 
     def header(self, root):
-        """
-        Creates the header
+        """Creates the header
+
+        :param root: 
+
         """
         header = tk.Canvas(
             root, width=1200, height=75, bg="#f9f9f9", highlightthickness=0
@@ -154,8 +153,10 @@ class Visualizer:
         )
 
     def body(self, root):
-        """
-        Creates the body
+        """Creates the body
+
+        :param root: 
+
         """
         body = tk.Canvas(
             root, width=1200, height=600, bg="#ffffff", highlightthickness=0
@@ -171,15 +172,14 @@ class Visualizer:
         end_date_month,
         end_date_year,
     ):
-        """
-        Makes sure that the inputs are valid dates
-        :param start_date_day:
-        :param start_date_month:
-        :param start_date_year:
-        :param end_date_day:
-        :param end_date_month:
-        :param end_date_year:
-        :return:
+        """Makes sure that the inputs are valid dates
+
+        :param start_date_day: param start_date_month:
+        :param start_date_year: param end_date_day:
+        :param end_date_month: param end_date_year:
+        :param start_date_month: 
+        :param end_date_day: 
+        :param end_date_year: 
 
         """
         date_list = [
@@ -272,15 +272,15 @@ class Visualizer:
         end_date_month,
         end_date_day,
     ):
-        """
-        Validates the date
-        :param start_date_year:
-        :param start_date_month:
-        :param start_date_day:
-        :param end_date_year:
-        :param end_date_month:
-        :param end_date_day:
-        :return:
+        """Validates the date
+
+        :param start_date_year: param start_date_month:
+        :param start_date_day: param end_date_year:
+        :param end_date_month: param end_date_day:
+        :param start_date_month: 
+        :param end_date_year: 
+        :param end_date_day: 
+
         """
         date_list = [
             start_date_year.get(),
