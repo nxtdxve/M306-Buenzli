@@ -109,6 +109,17 @@ class ESLReader:
             prod.append((item.attrib["end"], round(subtotal, 4))) if subtotal > 0 else None
         
         return prod
+    
+    def get_values(self):
+        used = self.get_usage()
+        produced = self.get_production()
+        result = []
+
+        for i in used:
+            for j in produced:
+                if i[0] == j[0]:
+                    result.append((i[0], i[1], j[1]))
+        return result
 
 
 
@@ -117,3 +128,4 @@ if __name__ == "__main__":
 
     print(esl.get_usage())
     print(esl.get_production())
+    print(esl.get_values())
