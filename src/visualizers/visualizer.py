@@ -35,9 +35,11 @@ class Visualizer:
         :param root:
 
         """
-        header = tk.Canvas(
-            root, width=1200, height=75, bg="#f9f9f9", highlightthickness=0
-        )
+        header = tk.Canvas(root,
+                           width=1200,
+                           height=75,
+                           bg="#f9f9f9",
+                           highlightthickness=0)
         header.place(x=0, y=0)
 
         export_dropdown = ttk.Combobox(
@@ -51,7 +53,10 @@ class Visualizer:
         export_dropdown.set("CSV")
 
         # Date Section
-        date_text = tk.Label(header, text="Datum:", bg="#f9f9f9", font=("Arial", 20))
+        date_text = tk.Label(header,
+                             text="Datum:",
+                             bg="#f9f9f9",
+                             font=("Arial", 20))
         date_text.place(relx=0.16, rely=0.5, anchor="center")
         start_date_year = ttk.Combobox(
             header,
@@ -69,7 +74,10 @@ class Visualizer:
             font=("Arial", 13),
             state="readonly",
         )
-        start_date_month.place(relx=0.2725, rely=0.5, height=50, anchor="center")
+        start_date_month.place(relx=0.2725,
+                               rely=0.5,
+                               height=50,
+                               anchor="center")
         start_date_month.set("01")
         start_date_day = ttk.Combobox(
             header,
@@ -111,25 +119,32 @@ class Visualizer:
         end_date_day.set("12")
 
         # Legend Section
-        legend_text = tk.Label(
-            header, text="Legende:", bg="#f9f9f9", font=("Arial", 20)
-        )
+        legend_text = tk.Label(header,
+                               text="Legende:",
+                               bg="#f9f9f9",
+                               font=("Arial", 20))
         legend_text.place(relx=0.55, rely=0.5, anchor="center")
-        blue_box = tk.Canvas(
-            header, width=20, height=20, bg="#0000ff", highlightthickness=0
-        )
+        blue_box = tk.Canvas(header,
+                             width=20,
+                             height=20,
+                             bg="#0000ff",
+                             highlightthickness=0)
         blue_box.place(relx=0.62, rely=0.3, anchor="center")
-        blue_text = tk.Label(
-            header, text="Gebrauchter Strom", bg="#f9f9f9", font=("Arial", 13)
-        )
+        blue_text = tk.Label(header,
+                             text="Gebrauchter Strom",
+                             bg="#f9f9f9",
+                             font=("Arial", 13))
         blue_text.place(relx=0.7, rely=0.3, anchor="center")
-        red_box = tk.Canvas(
-            header, width=20, height=20, bg="#ff0000", highlightthickness=0
-        )
+        red_box = tk.Canvas(header,
+                            width=20,
+                            height=20,
+                            bg="#ff0000",
+                            highlightthickness=0)
         red_box.place(relx=0.62, rely=0.7, anchor="center")
-        red_text = tk.Label(
-            header, text="Produzierter Strom", bg="#f9f9f9", font=("Arial", 13)
-        )
+        red_text = tk.Label(header,
+                            text="Produzierter Strom",
+                            bg="#f9f9f9",
+                            font=("Arial", 13))
         red_text.place(relx=0.7, rely=0.7, anchor="center")
 
         # Diagram Section
@@ -158,9 +173,11 @@ class Visualizer:
         :param root:
 
         """
-        body = tk.Canvas(
-            root, width=1200, height=600, bg="#ffffff", highlightthickness=0
-        )
+        body = tk.Canvas(root,
+                         width=1200,
+                         height=600,
+                         bg="#ffffff",
+                         highlightthickness=0)
         body.place(x=0, y=75)
 
     def check_dates(
@@ -319,10 +336,10 @@ class Visualizer:
                 end_date_day.set("12")
 
         if start_date_day.get() == "31" and start_date_month.get() in [
-            "04",
-            "06",
-            "09",
-            "11",
+                "04",
+                "06",
+                "09",
+                "11",
         ]:
             start_date_day.set("30")
         elif start_date_day.get() == "30" and start_date_month.get() == "02":
@@ -334,10 +351,10 @@ class Visualizer:
                 start_date_day.set("28")
 
         if end_date_day.get() == "31" and end_date_month.get() in [
-            "04",
-            "06",
-            "09",
-            "11",
+                "04",
+                "06",
+                "09",
+                "11",
         ]:
             end_date_day.set("30")
         elif end_date_day.get() == "30" and end_date_month.get() == "02":
