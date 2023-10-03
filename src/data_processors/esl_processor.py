@@ -33,7 +33,16 @@ class ESLProcessor:
 
             except:
                 continue
-                
+                        
+            df = pd.DataFrame({
+                'Timestamp': timestamp,
+                'Consumption': consumption,
+                'Production': production
+            })
+            df.set_index('Timestamp', inplace=True)
+            
+            self.data = pd.concat([self.data, df])
+        
             df = pd.DataFrame({
                 'Timestamp': timestamp,
                 'Consumption': consumption,
