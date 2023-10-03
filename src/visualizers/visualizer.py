@@ -36,15 +36,10 @@ class Visualizer:
         """
         header = tk.Canvas(root, width=1200, height=75, bg="#f9f9f9", highlightthickness=0)
         header.place(x=0, y=0)
-        '''
-        export_btn = tk.Button(header, text="Exportieren", width=10, bg="#cccccc", highlightthickness=0,
-                               highlightbackground="#e9e9e9", borderwidth=0, font=("Arial", 13))
-        export_btn.place(relx=0.05, rely=0.5, anchor="center", height=50)
-        '''
+
         export_options = ['CSV', 'JSON', 'Hochladen']
-        clicked = StringVar()
-        clicked.set('CSV')
-        export_dropdown = tk.OptionMenu(header, clicked, *export_options)
+        StringVar().set('CSV')
+        export_dropdown = tk.OptionMenu(header, StringVar(), *export_options)
         export_dropdown.config(height=50, bg='#cccccc', width=len(max(export_options, key=len)))
         export_dropdown.place(relx=0.05, rely=0.5, anchor="center", height=50)
 
