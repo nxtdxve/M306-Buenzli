@@ -32,7 +32,7 @@ class Visualizer:
     def header(self, root):
         """Creates the header
 
-        :param root: 
+        :param root:
 
         """
         header = tk.Canvas(
@@ -155,7 +155,7 @@ class Visualizer:
     def body(self, root):
         """Creates the body
 
-        :param root: 
+        :param root:
 
         """
         body = tk.Canvas(
@@ -177,9 +177,9 @@ class Visualizer:
         :param start_date_day: param start_date_month:
         :param start_date_year: param end_date_day:
         :param end_date_month: param end_date_year:
-        :param start_date_month: 
-        :param end_date_day: 
-        :param end_date_year: 
+        :param start_date_month:
+        :param end_date_day:
+        :param end_date_year:
 
         """
         date_list = [
@@ -277,9 +277,9 @@ class Visualizer:
         :param start_date_year: param start_date_month:
         :param start_date_day: param end_date_year:
         :param end_date_month: param end_date_day:
-        :param start_date_month: 
-        :param end_date_year: 
-        :param end_date_day: 
+        :param start_date_month:
+        :param end_date_year:
+        :param end_date_day:
 
         """
         date_list = [
