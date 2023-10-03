@@ -1,4 +1,6 @@
 data/*
+data_real/
 .pytest_cache
 __pycache__
-.idea
+output/csv/*
+output/json/*
