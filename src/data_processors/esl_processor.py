@@ -16,20 +16,37 @@ class ESLProcessor:
         results = []
 
         for file in files:
+            timestamp = []
+            consumption = []
+            production = []
+
             try:
                 esl = esl_reader.ESLReader(os.path.join(self.folder_path, file))
+                dataset = esl.get_values()
 
-                consumption = esl.get_usage()
-                production = esl.get_production()
-
-                dataset = (consumption[0][0], consumption[0][1], production[0][1])
-
-                results.append(dataset) if dataset not in results else print("duplicate found", dataset)
+                for i in dataset:
+                    if i not in results:
+                        timestamp.append(i[0])
+                        consumption.append(i[1])
+                        production.append(i[2])
+                        results.append(i)
 
             except:
                 continue
+                
+            df = pd.DataFrame({
+                'Timestamp': timestamp,
+                'Consumption': consumption,
+                'Production': production
+            })
+            df.set_index('Timestamp', inplace=True)
+            
+            self.data = pd.concat([self.data, df])
         
         return results
+    
+    def get_data_for_plotting(self):
+        return self.data
 
 
 
@@ -38,3 +55,5 @@ if __name__ == "__main__":
     thing = processor.process_files()
     for i in thing:
         print(i)
+    
+    print(processor.get_data_for_plotting())
