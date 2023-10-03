@@ -27,9 +27,14 @@ class ESLReader:
         Returns:
             str: The start and end time of the data in the ESL file.
         """
-        startTime = self.root.find('.//TimePeriod').attrib['end']
-        endTime = self.root.find('.//Header').attrib['created']
-        return startTime, endTime
+        data = self.root.findall('.//TimePeriod')
+
+        start_times = []
+
+        for item in data:
+            start_times.append(item.attrib["end"])
+
+        return start_times[::-1]
     
     def get_values(self):
         """
@@ -40,24 +45,75 @@ class ESLReader:
             1-1:1.8.2, 1-1:2.8.1 and 1-1:2.8.2.
         """
         values = []
-        bunch = self.root.find('.//TimePeriod')
-        for child in bunch:
-            if child.attrib["obis"] == "1-1:1.8.1":
-                values.append(child.attrib["value"])
-            elif child.attrib["obis"] == "1-1:1.8.2":
-                values.append(child.attrib["value"])
-            elif child.attrib["obis"] == "1-1:2.8.1":
-                values.append(child.attrib["value"])
-            elif child.attrib["obis"] == "1-1:2.8.2":
-                values.append(child.attrib["value"])
+        dates = []
+        bunch = self.root.findall('.//TimePeriod')
+
+        for item in bunch:
+            dates.append(item.attrib["end"])
+            for child in item:
+                if child.attrib["obis"] == "1-1:1.8.1":
+                    values.append(child.attrib["value"])
+                elif child.attrib["obis"] == "1-1:1.8.2":
+                    values.append(child.attrib["value"])
+                elif child.attrib["obis"] == "1-1:2.8.1":
+                    values.append(child.attrib["value"])
+                elif child.attrib["obis"] == "1-1:2.8.2":
+                    values.append(child.attrib["value"])
         
-        return values[0], values[1], values[2], values[3]
+        return values
+    
+    def get_usage(self):
+        """
+        Get total electricity usage from the ESL file.
+
+        Returns:
+            tuple: A tuple containing four values corresponding to OBIS codes 1-1:1.8.1,
+            1-1:1.8.2, 1-1:2.8.1 and 1-1:2.8.2.
+        """
+        bunch = self.root.findall('.//TimePeriod')
+        bunch = bunch[::-1]
+        usage = []
+
+        for item in bunch:
+            subtotal = 0
+            for child in item:
+                if child.attrib["obis"] == "1-1:1.8.1":
+                    subtotal += float(child.attrib["value"])
+                elif child.attrib["obis"] == "1-1:1.8.2":
+                    subtotal += float(child.attrib["value"])
+            
+            usage.append((item.attrib["end"], round(subtotal, 4))) if subtotal > 0 else None
+        
+        return usage
+
+    def get_production(self):
+        """
+        Get total electricity production from the ESL file.
+
+        Returns:
+            tuple: A tuple containing four values corresponding to OBIS codes 1-1:1.8.1,
+            1-1:1.8.2, 1-1:2.8.1 and 1-1:2.8.2.
+        """
+        bunch = self.root.findall('.//TimePeriod')
+        bunch = bunch[::-1]
+        prod = []
+
+        for item in bunch:
+            subtotal = 0
+            for child in item:
+                if child.attrib["obis"] == "1-1:2.8.1":
+                    subtotal += float(child.attrib["value"])
+                elif child.attrib["obis"] == "1-1:2.8.2":
+                    subtotal += float(child.attrib["value"])
+            
+            prod.append((item.attrib["end"], round(subtotal, 4))) if subtotal > 0 else None
+        
+        return prod
+
 
 
 if __name__ == "__main__":
-    esl = ESLReader('././data/ESL-Files/EdmRegisterWertExport_20190131_eslevu_20190322160349.xml')
-    print("-----------------------")
-    print(esl.get_interval())
-    print("-----------------------")
-    print(esl.get_values())
-    print("-----------------------")
+    esl = ESLReader('././data\ESL-Files\EdmRegisterWertExport_20201003_eslevu_20201003051024.xml')
+
+    print(esl.get_usage())
+    print(esl.get_production())
