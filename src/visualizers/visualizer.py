@@ -4,6 +4,7 @@ from tkinter import ttk
 from datetime import datetime
 
 
+
 class Visualizer:
     """
     Visualizer class
@@ -13,8 +14,9 @@ class Visualizer:
         """
         Constructor
         """
-        root = tk.Tk()
-        self.open_gui(root)
+        self.root = tk.Tk()
+        self.open_gui(self.root)
+        self.diagram_status = 0
 
     def open_gui(self, root):
         """
@@ -29,8 +31,8 @@ class Visualizer:
         root.geometry("1200x675")
         root.resizable(False, False)
         self.header(root)
-        self.body(root)
-        root.mainloop()
+
+
 
     def header(self, root):
         """
@@ -76,11 +78,11 @@ class Visualizer:
         # Legend Section
         legend_text = tk.Label(header, text="Legende:", bg="#f9f9f9", font=("Arial", 20))
         legend_text.place(relx=0.55, rely=0.5, anchor="center")
-        blue_box = tk.Canvas(header, width=20, height=20, bg="#0000ff", highlightthickness=0)
+        blue_box = tk.Canvas(header, width=20, height=20, bg="#2074b4", highlightthickness=0)
         blue_box.place(relx=0.62, rely=0.3, anchor="center")
         blue_text = tk.Label(header, text="Gebrauchter Strom", bg="#f9f9f9", font=("Arial", 13))
         blue_text.place(relx=0.7, rely=0.3, anchor="center")
-        red_box = tk.Canvas(header, width=20, height=20, bg="#ff0000", highlightthickness=0)
+        red_box = tk.Canvas(header, width=20, height=20, bg="#ff7f0e", highlightthickness=0)
         red_box.place(relx=0.62, rely=0.7, anchor="center")
         red_text = tk.Label(header, text="Produzierter Strom", bg="#f9f9f9", font=("Arial", 13))
         red_text.place(relx=0.7, rely=0.7, anchor="center")
@@ -94,14 +96,20 @@ class Visualizer:
         self.check_dates(start_date_day, start_date_month, start_date_year, end_date_day, end_date_month, end_date_year)
 
 
+    def get_data_from_diagram(self, diagram_dropdown, diagram_status):
+        """
+        Gets the data from the diagram
+        :param diagram_dropdown:
+        :return: 0 if Verbrauchsdiagramm, 1 if Zählerstandsdiagramm
+        """
+        if diagram_dropdown.get() == "Verbrauchsdiagramm":
+            return diagram_status
+        elif diagram_dropdown.get() == "Zählerstandsdiagramm":
+            diagram_status = 1
+            return diagram_status
 
 
-    def body(self, root):
-        """
-        Creates the body
-        """
-        body = tk.Canvas(root, width=1200, height=600, bg="#ffffff", highlightthickness=0)
-        body.place(x=0, y=75)
+
 
     def check_dates(self, start_date_day, start_date_month, start_date_year, end_date_day, end_date_month,
                     end_date_year):

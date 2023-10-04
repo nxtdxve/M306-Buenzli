@@ -19,7 +19,7 @@ class SDATProcessor:
             reader = SDATReader(file_path)
             document_id = reader.get_document_id()
             start_time, end_time = reader.get_interval()
-            start_time = datetime.fromisoformat(start_time)  # Konvertieren Sie das Startdatum in ein datetime-Objekt
+            start_time = datetime.fromisoformat(start_time[:-1])  # Konvertieren Sie das Startdatum in ein datetime-Objekt
             resolution, unit = reader.get_resolution()
             resolution = int(resolution)  # Annahme: Auflösung ist in Minuten
             observations = reader.get_observations()
