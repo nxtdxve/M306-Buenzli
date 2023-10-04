@@ -4,6 +4,7 @@ import numpy as np
 from datetime import datetime, timedelta
 from file_readers.sdat_reader import SDATReader
 
+
 class SDATProcessor:
     def __init__(self, folder_path):
         self.folder_path = folder_path
@@ -17,12 +18,12 @@ class SDATProcessor:
         # Füge enumerate hinzu, um den aktuellen Datei-Index zu erhalten
         for file_index, file in enumerate(files):
             file_path = os.path.join(self.folder_path, file)
-            
+
             # Verwenden Sie SDATReader, um die Daten zu lesen
             reader = SDATReader(file_path)
             document_id = reader.get_document_id()
             start_time, end_time = reader.get_interval()
-            start_time = datetime.fromisoformat(start_time)
+            start_time = datetime.fromisoformat(start_time[:-1])
             resolution, unit = reader.get_resolution()
             resolution = int(resolution)
             observations = reader.get_observations()
@@ -62,8 +63,9 @@ class SDATProcessor:
 
     def get_data_for_plotting(self):
         return self.data
-    
-    def print_progress_bar(self, iteration, total, prefix='', suffix='', decimals=1, length=100, fill='█', print_end="\r"):
+
+    def print_progress_bar(self, iteration, total, prefix='', suffix='', decimals=1, length=100, fill='█',
+                           print_end="\r"):
         """
         Call in a loop to create terminal progress bar
         @params:
@@ -80,6 +82,7 @@ class SDATProcessor:
         filled_length = int(length * iteration // total)
         bar = fill * filled_length + '-' * (length - filled_length)
         print(f'\r{prefix} |{bar}| {percent}% {suffix}', end=print_end)
+
 
 if __name__ == '__main__':
     processor = SDATProcessor('./data/sdat_files/')
