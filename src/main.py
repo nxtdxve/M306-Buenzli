@@ -29,19 +29,30 @@ from data_processors.esl_processor import ESLProcessor
     # Exporting ESL data to an HTTP server
     http_exporter = HTTPExporter(esl_data, "https://api.npoint.io/bf1d2bef297f90b39861")
     http_exporter.export() """
-
+def get_data_min_max(plot_data):
+    consumption_data = plot_data['Consumption'].tolist()
+    consumption_max = max(consumption_data)
+    consumption_min = min(consumption_data)
+    production_data = plot_data['Production'].tolist()
+    production_max = max(production_data)
+    production_min = min(production_data)
+    data_max = max(consumption_max, production_max)
+    data_min = min(consumption_min, production_min)
+    dpg.set_axis_limits(y_axis, data_min, data_max)
 
 def update_data(sender, app_data):
     option = dpg.get_value(sender)
 
     if option == "SDAT":
         plot_data = sdat_processor.get_data_for_plotting()
-        dpg.set_axis_limits(y_axis, 0, 8)
+        dpg.fit_axis_data(y_axis)
+        get_data_min_max(plot_data)
+
+
     else:
         plot_data = esl_processor.get_data_for_plotting()
-        # ESL zoom should show y axis from 0 to 80000
-        dpg.set_axis_limits(y_axis, 0, 80000)
-
+        dpg.fit_axis_data(y_axis)
+        get_data_min_max(plot_data)
 
 
 
