@@ -63,16 +63,31 @@ with dpg.window(label="Energy Data Visualization") as main_window:
     combo_id = dpg.add_combo(label="Choose data source", items=["SDAT", "ESL"], default_value="SDAT", callback=update_data)
 
     with dpg.menu_bar():
+
         with dpg.menu(label="Export as"):
-            dpg.add_menu_item(label="JSON File")
-            dpg.add_menu_item(label="CSV File")
-            dpg.add_menu_item(label="HTTP Request")
+            dpg.add_menu_item(label="CSV", enabled=False)
+            dpg.add_menu_item(label="JSON", enabled=False)
+            dpg.add_menu_item(label="HTTP", enabled=False)
+        
+        def call(sender, app_data):
+            if sender == "SDAT_import":
+                print("SDAT imported: ", app_data["file_path_name"])
+            elif sender == "ESL_import":
+                print("ESL imported: ", app_data["file_path_name"])
+            elif sender == "SDAT_export":
+                print("SDAT exported: ", app_data["file_path_name"])
+            elif sender == "ESL_export":
+                print("ESL exported: ", app_data["file_path_name"])
 
         with dpg.menu(label="Settings"):
-            dpg.add_file_dialog(directory_selector=True, show=False, tag="file_dialog_id_SDAT")
-            dpg.add_menu_item(label="directoy selection SDAT", callback=lambda: dpg.show_item("file_dialog_id_SDAT"))
-            dpg.add_file_dialog(directory_selector=True, show=False, tag="file_dialog_id_ESL")
-            dpg.add_menu_item(label="directoy selection ESL", callback=lambda: dpg.show_item("file_dialog_id_ESL"))
+            dpg.add_file_dialog(directory_selector=True, show=False, tag="SDAT_import", callback=call)
+            dpg.add_menu_item(label="directoy selection SDAT import", callback=lambda: dpg.show_item("SDAT_import"))
+            dpg.add_file_dialog(directory_selector=True, show=False, tag="ESL_import", callback=call)
+            dpg.add_menu_item(label="directoy selection ESL import", callback=lambda: dpg.show_item("ESL_import"))
+            dpg.add_file_dialog(directory_selector=True, show=False, tag="SDAT_export", callback=call)
+            dpg.add_menu_item(label="directoy selection SDAT export", callback=lambda: dpg.show_item("SDAT_export"))
+            dpg.add_file_dialog(directory_selector=True, show=False, tag="ESL_export", callback=call)
+            dpg.add_menu_item(label="directoy selection ESL export", callback=lambda: dpg.show_item("ESL_export"))
 
         """
         with dpg.menu(label="Graph selection"):
