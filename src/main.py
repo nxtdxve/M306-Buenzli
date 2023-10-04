@@ -85,7 +85,6 @@ with dpg.window(label="Energy Data Visualization") as main_window:
 
 # Initialize the data
 update_data(combo_id, None)
-
 dpg.create_viewport(title='Energy Data Visualization', width=800, height=600)
 dpg.setup_dearpygui()
 dpg.show_viewport()
