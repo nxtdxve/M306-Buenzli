@@ -1,5 +1,6 @@
 import os
 import pandas as pd
+import numpy as np
 from datetime import datetime, timedelta
 from file_readers.sdat_reader import SDATReader
 
@@ -19,9 +20,9 @@ class SDATProcessor:
             reader = SDATReader(file_path)
             document_id = reader.get_document_id()
             start_time, end_time = reader.get_interval()
-            start_time = datetime.fromisoformat(start_time)  # Konvertieren Sie das Startdatum in ein datetime-Objekt
+            start_time = datetime.fromisoformat(start_time)
             resolution, unit = reader.get_resolution()
-            resolution = int(resolution)  # Annahme: Auflösung ist in Minuten
+            resolution = int(resolution)
             observations = reader.get_observations()
             
             # Generieren Sie Zeitstempel und teilen Sie die Beobachtungen in Verbrauch und Produktion auf
@@ -33,16 +34,15 @@ class SDATProcessor:
                 current_time = start_time + timedelta(minutes=i * resolution)
                 timestamps.append(current_time)
                 
-                vol = float(vol)  # Annahme: Volumen ist eine Gleitkommazahl
+                vol = float(vol)
                 
                 if 'ID735' in document_id:
-                    consumption.append(0)
+                    consumption.append(None)
                     production.append(vol)
                 elif 'ID742' in document_id:
                     consumption.append(vol)
-                    production.append(0)
+                    production.append(None)
                 else:
-                    # Unbekannte ID, Sie können hier einen Fehler auslösen oder die Daten überspringen
                     continue
             
             # Erstellen Sie einen DataFrame für diese Datei
