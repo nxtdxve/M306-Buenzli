@@ -11,7 +11,8 @@ from exporters.csv_exporter import CSVExporter
 from exporters.json_exporter import JSONExporter
 from exporters.http_exporter import HTTPExporter
 
-""" if __name__ == '__main__':
+""" 
+if __name__ == '__main__':
     # Processing ESL files
     esl_processor = ESLProcessor('./data/ESL-Files/')
     esl_processor.process_files()
@@ -27,7 +28,8 @@ from exporters.http_exporter import HTTPExporter
 
     # Exporting ESL data to an HTTP server
     http_exporter = HTTPExporter(esl_data, "https://api.npoint.io/bf1d2bef297f90b39861")
-    http_exporter.export() """
+    http_exporter.export() 
+"""
 
 def update_data(sender, app_data):
     option = dpg.get_value(sender)
@@ -60,7 +62,25 @@ with dpg.window(label="Energy Data Visualization") as main_window:
     # Dropdown to select between SDAT and ESL
     combo_id = dpg.add_combo(label="Choose data source", items=["SDAT", "ESL"], default_value="SDAT", callback=update_data)
 
-    with dpg.plot(label="Consumption and Production", height=400, width=400):
+    with dpg.menu_bar():
+        with dpg.menu(label="Export as"):
+            dpg.add_menu_item(label="JSON File")
+            dpg.add_menu_item(label="CSV File")
+            dpg.add_menu_item(label="HTTP Request")
+
+        with dpg.menu(label="Settings"):
+            dpg.add_file_dialog(directory_selector=True, show=False, tag="file_dialog_id_SDAT")
+            dpg.add_menu_item(label="directoy selection SDAT", callback=lambda: dpg.show_item("file_dialog_id_SDAT"))
+            dpg.add_file_dialog(directory_selector=True, show=False, tag="file_dialog_id_ESL")
+            dpg.add_menu_item(label="directoy selection ESL", callback=lambda: dpg.show_item("file_dialog_id_ESL"))
+
+        """
+        with dpg.menu(label="Graph selection"):
+            dpg.add_menu_item(label="SDAT", check=True)
+            dpg.add_menu_item(label="ESL")
+        """
+    
+    with dpg.plot(label="Consumption and Production", height=400, width=-1):
         dpg.add_plot_legend()
         dpg.add_plot_axis(dpg.mvXAxis, label="Time")
         y_axis = dpg.add_plot_axis(dpg.mvYAxis, label="Value")
@@ -87,5 +107,3 @@ dpg.show_viewport()
 dpg.set_primary_window(main_window, True)
 dpg.start_dearpygui()
 dpg.destroy_context()
-
-

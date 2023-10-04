@@ -33,7 +33,7 @@ class ESLProcessor:
 
             except:
                 continue
-                
+                        
             df = pd.DataFrame({
                 'Timestamp': timestamp,
                 'Consumption': consumption,
