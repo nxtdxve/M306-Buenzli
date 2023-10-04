@@ -43,15 +43,6 @@ class ESLProcessor:
             
             self.data = pd.concat([self.data, df])
         
-            df = pd.DataFrame({
-                'Timestamp': timestamp,
-                'Consumption': consumption,
-                'Production': production
-            })
-            df.set_index('Timestamp', inplace=True)
-            
-            self.data = pd.concat([self.data, df])
-        
         return results
     
     def get_data_for_plotting(self):

@@ -60,7 +60,7 @@ with dpg.window(label="Energy Data Visualization") as main_window:
     # Dropdown to select between SDAT and ESL
     combo_id = dpg.add_combo(label="Choose data source", items=["SDAT", "ESL"], default_value="SDAT", callback=update_data)
 
-    with dpg.plot(label="Consumption and Production", height=400, width=400):
+    with dpg.plot(label="Consumption and Production", height=-1, width=-1):
         dpg.add_plot_legend()
         dpg.add_plot_axis(dpg.mvXAxis, label="Time")
         y_axis = dpg.add_plot_axis(dpg.mvYAxis, label="Value")
@@ -87,5 +87,3 @@ dpg.show_viewport()
 dpg.set_primary_window(main_window, True)
 dpg.start_dearpygui()
 dpg.destroy_context()
-
-
