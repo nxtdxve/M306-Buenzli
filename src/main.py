@@ -36,8 +36,19 @@ def update_data(sender, app_data):
     
     if option == "SDAT":
         plot_data = sdat_processor.get_data_for_plotting()
-    else:
+
+    elif option == "ESL":
         plot_data = esl_processor.get_data_for_plotting()
+
+    elif option == "SDAT_Import":
+        new_sdat_processor = SDATProcessor(SDAT_import_location)
+        new_sdat_processor.process_files()
+        plot_data = new_sdat_processor.get_data_for_plotting()
+
+    elif option == "ESL_Import":
+        new_esl_processor = ESLProcessor(ESL_import_location)
+        new_esl_processor.process_files()
+        plot_data = new_esl_processor.get_data_for_plotting()
         
     timestamps = pd.to_datetime(plot_data.index).view('int64') // 10**9
     timestamps = timestamps.astype(float).tolist()
@@ -58,36 +69,149 @@ esl_processor.process_files()
 # Create a Dear PyGui context
 dpg.create_context()
 
+# set data_export_location
+def set_data_export_location(location):
+    global data_export_location
+    data_export_location = location
+
+# set data_export_URL
+def set_data_export_URL(location):
+    global data_export_URL
+    data_export_URL = location
+
+# set ESL import location
+def set_ESL_import_location(location):
+    global ESL_import_location
+    ESL_import_location = location
+
+# set SDAT import location
+def set_SDAT_import_location(location):
+    global SDAT_import_location
+    SDAT_import_location = location
+
+#create export function for CSV
+def export_csv(sender, app_data):
+    option = dpg.get_value(combo_id)
+    if option == "SDAT":
+        data = sdat_processor.get_data_for_plotting()
+
+    elif option == "ESL":
+        data = esl_processor.get_data_for_plotting()
+
+    elif option == "SDAT_Import":
+        new_sdat_processor = SDATProcessor(SDAT_import_location)
+        new_sdat_processor.process_files()
+        data = new_sdat_processor.get_data_for_plotting()
+
+    elif option == "ESL_Import":
+        new_esl_processor = ESLProcessor(ESL_import_location)
+        new_esl_processor.process_files()
+        data = new_esl_processor.get_data_for_plotting()
+    
+    csv_exporter = CSVExporter(data, data_export_location)
+    csv_exporter.export()
+
+# create export function for JSON
+def export_json(sender, app_data):
+    option = dpg.get_value(combo_id)
+    if option == "SDAT":
+        data = sdat_processor.get_data_for_plotting()
+
+    elif option == "ESL":
+        data = esl_processor.get_data_for_plotting()
+
+    elif option == "SDAT_Import":
+        new_sdat_processor = SDATProcessor(SDAT_import_location)
+        new_sdat_processor.process_files()
+        data = new_sdat_processor.get_data_for_plotting()
+
+    elif option == "ESL_Import":
+        new_esl_processor = ESLProcessor(ESL_import_location)
+        new_esl_processor.process_files()
+        data = new_esl_processor.get_data_for_plotting()
+    
+    json_exporter = JSONExporter(data, data_export_location)
+    json_exporter.export()
+
+# create export function for HTTP
+def export_http(sender, app_data):
+    option = dpg.get_value(combo_id)
+
+    if option == "SDAT":
+        data = sdat_processor.get_data_for_plotting()
+
+    elif option == "ESL":
+        data = esl_processor.get_data_for_plotting()
+
+    elif option == "SDAT_Import":
+        new_sdat_processor = SDATProcessor(SDAT_import_location)
+        new_sdat_processor.process_files()
+        data = new_sdat_processor.get_data_for_plotting()
+
+    elif option == "ESL_Import":
+        new_esl_processor = ESLProcessor(ESL_import_location)
+        new_esl_processor.process_files()
+        data = new_esl_processor.get_data_for_plotting()
+    
+    http_exporter = HTTPExporter(data, data_export_URL)
+    
+    try: 
+        http_exporter.export()
+    except:
+        print("HTTP export failed")
+
 with dpg.window(label="Energy Data Visualization") as main_window:
     # Dropdown to select between SDAT and ESL
-    combo_id = dpg.add_combo(label="Choose data source", items=["SDAT", "ESL"], default_value="SDAT", callback=update_data)
+    combo_id = dpg.add_combo(label="Choose data source", items=["SDAT", "ESL"], default_value="SDAT", callback=update_data, tag="combo_id")
 
     with dpg.menu_bar():
-
         with dpg.menu(label="Export as"):
-            dpg.add_menu_item(label="CSV", enabled=False)
-            dpg.add_menu_item(label="JSON", enabled=False)
-            dpg.add_menu_item(label="HTTP", enabled=False)
+            dpg.add_menu_item(label="CSV", tag="CSV", enabled=False, callback=export_csv)
+            dpg.add_menu_item(label="JSON", tag="JSON", enabled=False, callback=export_json)
+            dpg.add_menu_item(label="HTTP", tag="HTTP", enabled=False, callback=export_http)
         
         def call(sender, app_data):
             if sender == "SDAT_import":
-                print("SDAT imported: ", app_data["file_path_name"])
+                combo_id_items = dpg.get_item_configuration("combo_id")["items"]
+                set_SDAT_import_location(app_data["file_path_name"])
+                dpg.configure_item("combo_id", items=["SDAT_Import", combo_id_items[1]], default_value="SDAT", callback=update_data)
+
             elif sender == "ESL_import":
-                print("ESL imported: ", app_data["file_path_name"])
-            elif sender == "SDAT_export":
-                print("SDAT exported: ", app_data["file_path_name"])
-            elif sender == "ESL_export":
-                print("ESL exported: ", app_data["file_path_name"])
+                combo_id_items = dpg.get_item_configuration("combo_id")["items"]
+                set_ESL_import_location(app_data["file_path_name"])
+                dpg.configure_item("combo_id", items=[combo_id_items[0], "ESL_Import"], default_value="SDAT", callback=update_data)
+
+            elif sender == "Data_export":
+                print("data exported: ", app_data["file_path_name"])
+                dpg.enable_item("CSV")
+                dpg.enable_item("JSON")
+                set_data_export_location(app_data["file_path_name"])
+
+            elif sender == "URL_export":
+                dpg.enable_item("HTTP")
+                set_data_export_URL(app_data)
 
         with dpg.menu(label="Settings"):
             dpg.add_file_dialog(directory_selector=True, show=False, tag="SDAT_import", callback=call)
             dpg.add_menu_item(label="directoy selection SDAT import", callback=lambda: dpg.show_item("SDAT_import"))
+
             dpg.add_file_dialog(directory_selector=True, show=False, tag="ESL_import", callback=call)
             dpg.add_menu_item(label="directoy selection ESL import", callback=lambda: dpg.show_item("ESL_import"))
-            dpg.add_file_dialog(directory_selector=True, show=False, tag="SDAT_export", callback=call)
-            dpg.add_menu_item(label="directoy selection SDAT export", callback=lambda: dpg.show_item("SDAT_export"))
-            dpg.add_file_dialog(directory_selector=True, show=False, tag="ESL_export", callback=call)
-            dpg.add_menu_item(label="directoy selection ESL export", callback=lambda: dpg.show_item("ESL_export"))
+
+            dpg.add_file_dialog(directory_selector=True, show=False, tag="Data_export", callback=call)
+            dpg.add_menu_item(label="directoy selection data export", callback=lambda: dpg.show_item("Data_export"))
+            
+            with dpg.window(label="Delete Files", modal=True, show=False, tag="modal_id", no_title_bar=True):
+
+                dpg.add_text("Please enter your URL for the HTTP export: ")
+                dpg.add_separator()
+                dpg.add_input_text(label="URL", default_value="https://api.npoint.io/bf1d2bef297f90b39861", tag="URL_export", callback=call)
+
+                with dpg.group(horizontal=True):
+                    dpg.add_button(label="OK", width=75, callback=lambda: dpg.configure_item("modal_id", show=False))
+                    dpg.add_button(label="Cancel", width=75, callback=lambda: dpg.configure_item("modal_id", show=False))
+
+            dpg.add_menu_item(label="HTTP-URL selection export", callback=lambda: dpg.configure_item("modal_id", show=True))
 
         """
         with dpg.menu(label="Graph selection"):
