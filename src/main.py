@@ -36,8 +36,15 @@ def update_data(sender, app_data):
 
     if option == "SDAT":
         plot_data = sdat_processor.get_data_for_plotting()
+        dpg.set_axis_limits(y_axis, 0, 8)
     else:
         plot_data = esl_processor.get_data_for_plotting()
+        # ESL zoom should show y axis from 0 to 80000
+        dpg.set_axis_limits(y_axis, 0, 80000)
+
+
+
+
 
     timestamps = pd.to_datetime(plot_data.index).view('int64') // 10 ** 9
     timestamps = timestamps.astype(float).tolist()
@@ -76,6 +83,7 @@ with dpg.window(label="Energy Data Visualization") as main_window:
 
         # Add the axes
         x_axis = dpg.add_plot_axis(dpg.mvXAxis, label="Time", time=True)
+
         y_axis = dpg.add_plot_axis(dpg.mvYAxis, label="Value")
 
         # Adding the consumption line
