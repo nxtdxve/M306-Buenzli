@@ -45,3 +45,5 @@ class HTTPExporter:
             print("Successfully posted data.")
         else:
             print(f"Failed to post data. Status code: {response.status_code}, Reason: {response.text}")
+
+        return response

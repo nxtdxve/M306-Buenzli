@@ -101,4 +101,3 @@ if __name__ == '__main__':
     processor.process_files()
     plot_data = processor.get_data_for_plotting()
     print(plot_data)
-    plot_data.to_csv('./output/debug/final_output.csv')

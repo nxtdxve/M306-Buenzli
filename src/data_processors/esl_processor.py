@@ -14,7 +14,6 @@ class ESLProcessor:
         self.folder_path = folder_path
         self.data = pd.DataFrame()
         self.counter_data = pd.DataFrame()
-        self.data_list = []
 
     def process_files(self):
         files = [f for f in os.listdir(self.folder_path) if f.endswith('.xml')]
@@ -45,6 +44,7 @@ class ESLProcessor:
 
         return results
 
+
     def print_progress_bar(self, iteration, total, prefix='', suffix='', decimals=1, length=100, fill='█',
                            print_end="\r"):
         percent = ("{0:." + str(decimals) + "f}").format(100 * (iteration / float(total)))
@@ -56,6 +56,13 @@ class ESLProcessor:
         time_list = []
         consumption_list = []
         production_list = []
+        reversed_2018_consumption = []
+        reversed_2018_production = []
+        min_time = esl[0][0]
+        min_consumption = esl[0][1]
+        min_production = esl[0][2]
+
+
         for i in esl:
             initial_time = i[0]
             initial_consumption = i[1]
@@ -70,6 +77,7 @@ class ESLProcessor:
                         consumption_list.append(initial_consumption)
                         production_list.append(initial_production)
 
+
         df = pd.DataFrame({
             'Timestamp': time_list,
             'Consumption': consumption_list,
@@ -78,6 +86,7 @@ class ESLProcessor:
         df.set_index('Timestamp', inplace=True)
 
         self.counter_data = pd.concat([self.counter_data, df])
+        self.counter_data.sort_index(inplace=True)
 
 
     def get_data_for_plotting_counter(self):
@@ -85,9 +94,8 @@ class ESLProcessor:
 
 
 if __name__ == "__main__":
-    processor = ESLProcessor("../data/ESL-Files/")
+    processor = ESLProcessor("../data/ESL-Files")
     thing = processor.process_files()
     for i in thing:
         print(i)
-
 
