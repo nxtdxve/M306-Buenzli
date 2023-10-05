@@ -89,6 +89,30 @@ def set_SDAT_import_location(location):
     global SDAT_import_location
     SDAT_import_location = location
 
+def call(sender, app_data):
+            if sender == "SDAT_import":
+                combo_id_items = dpg.get_item_configuration("combo_id")["items"]
+                set_SDAT_import_location(app_data["file_path_name"])
+                dpg.configure_item("combo_id", items=["SDAT_Import", combo_id_items[1]], default_value="SDAT", callback=update_data)
+
+            elif sender == "ESL_import":
+                combo_id_items = dpg.get_item_configuration("combo_id")["items"]
+                set_ESL_import_location(app_data["file_path_name"])
+                dpg.configure_item("combo_id", items=[combo_id_items[0], "ESL_Import"], default_value="SDAT", callback=update_data)
+
+            elif sender == "CSV_export":
+                set_data_export_location(app_data["file_path_name"])
+                export_csv(sender, app_data)
+            
+            elif sender == "JSON_export":
+                set_data_export_location(app_data["file_path_name"])
+                export_json(sender, app_data)
+
+            elif sender == "URL_export":
+                set_data_export_URL(app_data)
+                print(data_export_URL)
+                export_http(sender, app_data)
+
 #create export function for CSV
 def export_csv(sender, app_data):
     option = dpg.get_value(combo_id)
@@ -166,42 +190,13 @@ with dpg.window(label="Energy Data Visualization") as main_window:
 
     with dpg.menu_bar():
         with dpg.menu(label="Export as"):
-            dpg.add_menu_item(label="CSV", tag="CSV", enabled=False, callback=export_csv)
-            dpg.add_menu_item(label="JSON", tag="JSON", enabled=False, callback=export_json)
-            dpg.add_menu_item(label="HTTP", tag="HTTP", enabled=False, callback=export_http)
-        
-        def call(sender, app_data):
-            if sender == "SDAT_import":
-                combo_id_items = dpg.get_item_configuration("combo_id")["items"]
-                set_SDAT_import_location(app_data["file_path_name"])
-                dpg.configure_item("combo_id", items=["SDAT_Import", combo_id_items[1]], default_value="SDAT", callback=update_data)
+            dpg.add_file_dialog(directory_selector=True, show=False, tag="CSV_export", callback=call, height=300) # new
+            dpg.add_menu_item(label="CSV", callback=lambda: dpg.show_item("CSV_export"))
 
-            elif sender == "ESL_import":
-                combo_id_items = dpg.get_item_configuration("combo_id")["items"]
-                set_ESL_import_location(app_data["file_path_name"])
-                dpg.configure_item("combo_id", items=[combo_id_items[0], "ESL_Import"], default_value="SDAT", callback=update_data)
+            dpg.add_file_dialog(directory_selector=True, show=False, tag="JSON_export", callback=call, height=300) # new
+            dpg.add_menu_item(label="JSON", callback=lambda: dpg.show_item("JSON_export"))
 
-            elif sender == "Data_export":
-                print("data exported: ", app_data["file_path_name"])
-                dpg.enable_item("CSV")
-                dpg.enable_item("JSON")
-                set_data_export_location(app_data["file_path_name"])
-
-            elif sender == "URL_export":
-                dpg.enable_item("HTTP")
-                set_data_export_URL(app_data)
-
-        with dpg.menu(label="Settings"):
-            dpg.add_file_dialog(directory_selector=True, show=False, tag="SDAT_import", callback=call)
-            dpg.add_menu_item(label="directoy selection SDAT import", callback=lambda: dpg.show_item("SDAT_import"))
-
-            dpg.add_file_dialog(directory_selector=True, show=False, tag="ESL_import", callback=call)
-            dpg.add_menu_item(label="directoy selection ESL import", callback=lambda: dpg.show_item("ESL_import"))
-
-            dpg.add_file_dialog(directory_selector=True, show=False, tag="Data_export", callback=call)
-            dpg.add_menu_item(label="directoy selection data export", callback=lambda: dpg.show_item("Data_export"))
-            
-            with dpg.window(label="Delete Files", modal=True, show=False, tag="modal_id", no_title_bar=True):
+            with dpg.window(label="New export URL", modal=True, show=False, tag="modal_id", no_title_bar=True):
 
                 dpg.add_text("Please enter your URL for the HTTP export: ")
                 dpg.add_separator()
@@ -211,13 +206,14 @@ with dpg.window(label="Energy Data Visualization") as main_window:
                     dpg.add_button(label="OK", width=75, callback=lambda: dpg.configure_item("modal_id", show=False))
                     dpg.add_button(label="Cancel", width=75, callback=lambda: dpg.configure_item("modal_id", show=False))
 
-            dpg.add_menu_item(label="HTTP-URL selection export", callback=lambda: dpg.configure_item("modal_id", show=True))
+            dpg.add_menu_item(label="HTTP-URL", callback=lambda: dpg.configure_item("modal_id", show=True))
 
-        """
-        with dpg.menu(label="Graph selection"):
-            dpg.add_menu_item(label="SDAT", check=True)
-            dpg.add_menu_item(label="ESL")
-        """
+        with dpg.menu(label="Settings"):
+            dpg.add_file_dialog(directory_selector=True, show=False, tag="SDAT_import", callback=call)
+            dpg.add_menu_item(label="directoy selection SDAT import", callback=lambda: dpg.show_item("SDAT_import"))
+
+            dpg.add_file_dialog(directory_selector=True, show=False, tag="ESL_import", callback=call)
+            dpg.add_menu_item(label="directoy selection ESL import", callback=lambda: dpg.show_item("ESL_import"))
     
     with dpg.plot(label="Consumption and Production", height=400, width=-1):
         dpg.add_plot_legend()
