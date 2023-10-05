@@ -1,6 +1,7 @@
 # General imports
 import pandas as pd
 import dearpygui.dearpygui as dpg
+from dearpygui_ext.themes import create_theme_imgui_light, create_theme_imgui_dark
 
 # Data Processors
 from data_processors.sdat_processor import SDATProcessor
@@ -29,13 +30,37 @@ from data_processors.esl_processor import ESLProcessor
     http_exporter = HTTPExporter(esl_data, "https://api.npoint.io/bf1d2bef297f90b39861")
     http_exporter.export() """
 
+def get_data_min_max(plot_data):
+    consumption_data = plot_data['Consumption'].tolist()
+    consumption_max = max(consumption_data)
+    consumption_min = min(consumption_data)
+    production_data = plot_data['Production'].tolist()
+    production_max = max(production_data)
+    production_min = min(production_data)
+    data_max = max(consumption_max, production_max)
+    data_min = min(consumption_min, production_min)
+    dpg.set_axis_limits(y_axis, data_min, data_max)
+
+def toggle_theme(sender, app_data):
+    is_light_mode = dpg.get_value(sender)
+    if is_light_mode:
+        dpg.bind_theme(light_theme)
+    else:
+        dpg.bind_theme(dark_theme)
+
 def update_data(sender, app_data):
     option = dpg.get_value(sender)
 
     if option == "SDAT":
         plot_data = sdat_processor.get_data_for_plotting()
+        dpg.fit_axis_data(y_axis)
+        get_data_min_max(plot_data)
+
+
     else:
         plot_data = esl_processor.get_data_for_plotting()
+        dpg.fit_axis_data(y_axis)
+        get_data_min_max(plot_data)
 
     timestamps = pd.to_datetime(plot_data.index).view('int64') // 10 ** 9
     timestamps = timestamps.astype(float).tolist()
@@ -74,12 +99,8 @@ with dpg.window(label="Energy Data Visualization") as main_window:
             dpg.add_menu_item(label="directoy selection SDAT", callback=lambda: dpg.show_item("file_dialog_id_SDAT"))
             dpg.add_file_dialog(directory_selector=True, show=False, tag="file_dialog_id_ESL")
             dpg.add_menu_item(label="directoy selection ESL", callback=lambda: dpg.show_item("file_dialog_id_ESL"))
+            light_mode_toggle = dpg.add_checkbox(label="Light Mode", callback=toggle_theme)
 
-        """
-        with dpg.menu(label="Graph selection"):
-            dpg.add_menu_item(label="SDAT", check=True)
-            dpg.add_menu_item(label="ESL")
-        """
     
 
     with dpg.plot(label="Consumption and Production", height=-1, width=-1, use_24hour_clock=True) as plot_widget:
@@ -103,8 +124,12 @@ with dpg.window(label="Energy Data Visualization") as main_window:
 
 # Initialize the data
 update_data(combo_id, None)
+light_theme = create_theme_imgui_light()
+dark_theme = create_theme_imgui_dark()
+
 dpg.create_viewport(title='Energy Data Visualization', width=800, height=600)
 dpg.setup_dearpygui()
+dpg.bind_theme(dark_theme)
 dpg.show_viewport()
 dpg.set_primary_window(main_window, True)
 dpg.start_dearpygui()
