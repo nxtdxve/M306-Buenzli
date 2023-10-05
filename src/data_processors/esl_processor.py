@@ -67,11 +67,12 @@ class ESLProcessor:
         time_list = []
         consumption_list = []
         production_list = []
-        reversed_2108_consumption = []
-        reversed_2108_production = []
+        reversed_2018_consumption = []
+        reversed_2018_production = []
         min_time = esl[0][0]
         min_consumption = esl[0][1]
         min_production = esl[0][2]
+        print(min_time, min_consumption, min_production)
         for s in sdat:
             if s[0] < min_time:
                 if not math.isnan(s[1]):
@@ -79,13 +80,14 @@ class ESLProcessor:
                 if not math.isnan(s[2]):
                     min_production -= s[2]
                 time_list.append(s[0])
-                reversed_2108_consumption.append(min_consumption)
-                print(min_consumption)
-                reversed_2108_production.append(min_production)
-        reversed_2108_consumption.reverse()
-        reversed_2108_production.reverse()
-        consumption_list.extend(reversed_2108_consumption)
-        production_list.extend(reversed_2108_production)
+                reversed_2018_production.append(min_production)
+                reversed_2018_consumption.append(min_consumption)
+
+        reversed_2018_consumption.reverse()
+        reversed_2018_production.reverse()
+        consumption_list.extend(reversed_2018_consumption)
+        production_list.extend(reversed_2018_production)
+
 
         for i in esl:
             initial_time = i[0]
@@ -97,9 +99,25 @@ class ESLProcessor:
                         initial_consumption += j[1]
                     if not math.isnan(j[2]):
                         initial_production += j[2]
-                    time_list.append(j[0])
-                    consumption_list.append(initial_consumption)
-                    production_list.append(initial_production)
+                        time_list.append(j[0])
+                        consumption_list.append(initial_consumption)
+                        production_list.append(initial_production)
+            """
+            test_list = []
+            for i in range(len(time_list)):
+                test_list.append((time_list[i], consumption_list[i], production_list[i]))
+
+            for i in test_list:
+                if i[0][:7] == '2018-12':
+                    print(i)
+            """
+
+
+
+
+
+
+
 
 
 
