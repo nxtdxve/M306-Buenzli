@@ -47,6 +47,8 @@ class ESLProcessor:
             df.set_index('Timestamp', inplace=True)
 
             self.data = pd.concat([self.data, df])
+            self.data.sort_index(inplace=True)
+
 
             # Fortschrittsbalken aktualisieren
             self.print_progress_bar(file_index + 1, total_files, prefix='Reading ESL:', suffix='Complete', length=50)
@@ -97,6 +99,7 @@ class ESLProcessor:
         df.set_index('Timestamp', inplace=True)
 
         self.counter_data = pd.concat([self.counter_data, df])
+        self.counter_data.sort_index(inplace=True)
 
 
     def get_data_for_plotting_counter(self):
