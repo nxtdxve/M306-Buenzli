@@ -4,5 +4,6 @@ data_real/
 __pycache__
 output/csv/*
 output/json/*
+output/debug
 demo.py
 data_fake
