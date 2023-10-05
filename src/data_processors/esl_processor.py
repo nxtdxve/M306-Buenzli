@@ -64,11 +64,29 @@ class ESLProcessor:
         print(f'\r{prefix} |{bar}| {percent}% {suffix}', end=print_end)
 
     def counter(self, esl, sdat):
-        counter_c = 0
-        counter_p = 0
         time_list = []
         consumption_list = []
         production_list = []
+        reversed_2108_consumption = []
+        reversed_2108_production = []
+        min_time = esl[0][0]
+        min_consumption = esl[0][1]
+        min_production = esl[0][2]
+        for s in sdat:
+            if s[0] < min_time:
+                if not math.isnan(s[1]):
+                    min_consumption -= s[1]
+                if not math.isnan(s[2]):
+                    min_production -= s[2]
+                time_list.append(s[0])
+                reversed_2108_consumption.append(min_consumption)
+                print(min_consumption)
+                reversed_2108_production.append(min_production)
+        reversed_2108_consumption.reverse()
+        reversed_2108_production.reverse()
+        consumption_list.extend(reversed_2108_consumption)
+        production_list.extend(reversed_2108_production)
+
         for i in esl:
             initial_time = i[0]
             initial_consumption = i[1]
@@ -82,6 +100,8 @@ class ESLProcessor:
                     time_list.append(j[0])
                     consumption_list.append(initial_consumption)
                     production_list.append(initial_production)
+
+
 
         df = pd.DataFrame({
             'Timestamp': time_list,
