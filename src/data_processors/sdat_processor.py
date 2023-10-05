@@ -28,6 +28,8 @@ class SDATProcessor:
             resolution = int(resolution)
             observations = reader.get_observations()
 
+
+
             # Generieren Sie Zeitstempel und teilen Sie die Beobachtungen in Verbrauch und Produktion auf
             timestamps = []
             consumption = []
@@ -48,6 +50,7 @@ class SDATProcessor:
                 else:
                     continue
 
+
             # Erstellen Sie einen DataFrame für diese Datei
             df = pd.DataFrame({
                 'Timestamp': timestamps,
@@ -55,6 +58,7 @@ class SDATProcessor:
                 'Production': production
             })
             df.set_index('Timestamp', inplace=True)
+
 
             self.data = pd.concat([self.data, df])
 
