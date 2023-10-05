@@ -58,7 +58,7 @@ def update_data(sender, app_data):
 
 
     else:
-        plot_data = esl_processor.get_data_for_plotting()
+        plot_data = esl_processor.get_data_for_plotting_counter()
         dpg.fit_axis_data(y_axis)
         get_data_min_max(plot_data)
 
@@ -76,9 +76,20 @@ def update_data(sender, app_data):
 sdat_processor = SDATProcessor('./data/SDAT-Files/')
 sdat_processor.process_files()
 
+sdat_list_list = sdat_processor.get_data_for_plotting().reset_index().values.tolist()
+formatted_tuple_list = []
+
+for i in sdat_list_list:
+    timestamp = pd.Timestamp(i[0])
+    formatted_time = timestamp.strftime('%Y-%m-%dT%H:%M:%S')
+    formatted_tuple = (formatted_time, i[1], i[2])
+    formatted_tuple_list.append(formatted_tuple)
+
+
 # Prepare the ESL data
 esl_processor = ESLProcessor('./data/ESL-Files/')
 esl_processor.process_files()
+esl_processor.counter(esl_processor.process_files(), formatted_tuple_list)
 
 # Create a Dear PyGui context
 dpg.create_context()
