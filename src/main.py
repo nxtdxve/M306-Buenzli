@@ -47,17 +47,12 @@ def update_data(sender, app_data):
     option = dpg.get_value(sender)
 
 
-    if option == "SDAT":
+    if option == "Verbrauch":
         plot_data = sdat_processor.get_data_for_plotting()
         dpg.fit_axis_data(y_axis)
         get_data_min_max(plot_data)
-
-    elif option == "Counter":
-        plot_data = esl_processor.get_data_for_plotting_counter()
-        dpg.fit_axis_data(y_axis)
-        get_data_min_max(plot_data)
     else:
-        plot_data = esl_processor.get_data_for_plotting()
+        plot_data = esl_processor.get_data_for_plotting_counter()
         dpg.fit_axis_data(y_axis)
         get_data_min_max(plot_data)
 
@@ -87,7 +82,6 @@ for i in sdat_list_list:
 
 # Prepare the ESL data
 esl_processor = ESLProcessor('./data/ESL-Files/')
-esl_processor.process_files()
 esl_processor.counter(esl_processor.process_files(), formatted_tuple_list)
 
 
@@ -97,7 +91,7 @@ dpg.create_context()
 
 with dpg.window(label="Energy Data Visualization") as main_window:
     # Dropdown to select between SDAT and ESL
-    combo_id = dpg.add_combo(label="Choose data source", items=["SDAT", "ESL", "Counter"], default_value="SDAT",
+    combo_id = dpg.add_combo(label="Choose data source", items=["Verbrauch", "Zählerstand"], default_value="Verbrauch",
                              callback=update_data, width=200)
     
     with dpg.menu_bar():
@@ -130,8 +124,8 @@ with dpg.window(label="Energy Data Visualization") as main_window:
         production_data = plot_data['Production'].tolist()
 
         # Add the axes
-        x_axis = dpg.add_plot_axis(dpg.mvXAxis, label="Time", time=True)
-        y_axis = dpg.add_plot_axis(dpg.mvYAxis, label="Value")
+        x_axis = dpg.add_plot_axis(dpg.mvXAxis, label="Zeit", time=True)
+        y_axis = dpg.add_plot_axis(dpg.mvYAxis, label="kWh")
 
         # Adding the consumption line
         consumption_line = dpg.add_line_series(timestamps, consumption_data, label="Consumption", parent=y_axis)
