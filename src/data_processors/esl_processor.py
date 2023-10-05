@@ -39,17 +39,6 @@ class ESLProcessor:
             except:
                 continue
 
-            df = pd.DataFrame({
-                'Timestamp': timestamp,
-                'Consumption': consumption,
-                'Production': production
-            })
-            df.set_index('Timestamp', inplace=True)
-
-            self.data = pd.concat([self.data, df])
-            self.data.sort_index(inplace=True)
-
-
             # Fortschrittsbalken aktualisieren
             self.print_progress_bar(file_index + 1, total_files, prefix='Reading ESL:', suffix='Complete', length=50)
 
