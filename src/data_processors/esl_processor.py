@@ -34,21 +34,21 @@ class ESLProcessor:
 
             except:
                 continue
-                        
+
             df = pd.DataFrame({
                 'Timestamp': timestamp,
                 'Consumption': consumption,
                 'Production': production
             })
             df.set_index('Timestamp', inplace=True)
-            
+
             self.data = pd.concat([self.data, df])
 
             # Fortschrittsbalken aktualisieren
             self.print_progress_bar(file_index + 1, total_files, prefix='Reading ESL:', suffix='Complete', length=50)
 
         return results
-    
+
     def get_data_for_plotting(self):
         return self.data
 
@@ -57,6 +57,14 @@ class ESLProcessor:
         filled_length = int(length * iteration // total)
         bar = fill * filled_length + '-' * (length - filled_length)
         print(f'\r{prefix} |{bar}| {percent}% {suffix}', end=print_end)
+
+    def zaehler(self, esl_data, sdat_data):
+        zaehler_cons = 0
+        zaehler_prod = 0
+        time_stamps = esl_data.index.tolist() # get the timestamps from the esl-file
+
+
+
 
 
 if __name__ == "__main__":

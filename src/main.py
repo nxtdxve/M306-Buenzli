@@ -48,12 +48,15 @@ def update_data(sender, app_data):
     dpg.fit_axis_data(y_axis)
 
 # Prepare the SDAT data
-sdat_processor = SDATProcessor('./data/SDAT-Files/')
+sdat_processor = SDATProcessor('../data/SDAT_Files')
 sdat_processor.process_files()
 
 # Prepare the ESL data
-esl_processor = ESLProcessor('./data/ESL-Files/')
+esl_processor = ESLProcessor('../data/ESL_Files/')
 esl_processor.process_files()
+
+# Prepare the counter
+esl_counter = ESLProcessor.zaehler(esl_processor, esl_processor.get_data_for_plotting(), sdat_processor.get_data_for_plotting())
 
 # Create a Dear PyGui context
 dpg.create_context()

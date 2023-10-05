@@ -82,7 +82,7 @@ class SDATProcessor:
         print(f'\r{prefix} |{bar}| {percent}% {suffix}', end=print_end)
 
 if __name__ == '__main__':
-    processor = SDATProcessor('./data/sdat_files/')
+    processor = SDATProcessor('../../data/SDAT_Files')
     processor.process_files()
     plot_data = processor.get_data_for_plotting()
     print(plot_data)
