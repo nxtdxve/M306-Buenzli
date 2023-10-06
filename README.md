@@ -5,6 +5,7 @@ For the Modul 306 in BZZ. It allows Energieagentur Bünzli to efficiently manage
 
 - [Features](#features)
 - [Usage](#usage)
+- [How to use](#how_to_use)
 - [Technologies Used](#technologies-used)
 - [License](#license)
 
@@ -23,6 +24,10 @@ For the Modul 306 in BZZ. It allows Energieagentur Bünzli to efficiently manage
 - Software allows the export of the data in a CSV-File
 - Software allows the export of the data in a JSON-File
 - Software allows the load of the data with http POST on a server
+
+## How to use
+ ```bash
+   git clone https://github.com/username/example-repo.git
 
 ## Technologies Used
 - Python
