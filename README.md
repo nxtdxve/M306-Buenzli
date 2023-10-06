@@ -27,7 +27,9 @@ For the Modul 306 in BZZ. It allows Energieagentur Bünzli to efficiently manage
 
 ## How to use
  ```bash
-   git clone https://github.com/username/example-repo.git
+   git clone git@github.com:nxtdxve/M306-Buenzli.git
+ ```
+ Open the project in a virtual environment. Put the sdat- and ESL-Files in the data directory if this is the first time you're using the software.
 
 ## Technologies Used
 - Python
