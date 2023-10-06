@@ -51,8 +51,8 @@ if os.path.isfile("./src/settings.json") == False:
         settings_list = {
             "language": "English",
             "theme": "Light",
-            "ESL_import_location": "",
-            "SDAT_import_location": ""
+            "ESL_import_location": "./data/ESL-Files/",
+            "SDAT_import_location": "./data/SDAT-Files/"
         }
         json.dump(settings_list, settings_file, indent=4)
 
@@ -93,21 +93,17 @@ def update_data(sender, app_data):
         get_data_min_max(plot_data)
 
     elif option == "ESL":
-        plot_data = esl_processor.get_data_for_plotting()
+        plot_data = esl_processor.get_data_for_plotting_counter()
         dpg.fit_axis_data(y_axis)
         get_data_min_max(plot_data)
 
     elif option == current_language[3]:
-        new_sdat_processor = SDATProcessor(SDAT_import_location)
-        new_sdat_processor.process_files()
-        plot_data = new_sdat_processor.get_data_for_plotting()
+        plot_data = sdat_processor.get_data_for_plotting()
         dpg.fit_axis_data(y_axis)
         get_data_min_max(plot_data)
 
     elif option == current_language[4]:
-        new_esl_processor = ESLProcessor(ESL_import_location)
-        new_esl_processor.counter(new_esl_processor.process_files(), formatted_tuple_list)
-        plot_data = new_esl_processor.get_data_for_plotting_counter()
+        plot_data = esl_processor.get_data_for_plotting_counter()
         dpg.fit_axis_data(y_axis)
         get_data_min_max(plot_data)
         
@@ -149,37 +145,6 @@ def toggle_theme(sender, app_data):
         with open("./src/settings.json", "w", encoding="utf-8") as settings_file:
             json.dump(settings_list, settings_file, indent=4)
 
-
-# Prepare the SDAT data
-sdat_processor = SDATProcessor('./data/SDAT-Files/')
-sdat_processor.process_files()
-
-sdat_list_list = sdat_processor.get_data_for_plotting().reset_index().values.tolist()
-formatted_tuple_list = []
-
-for i in sdat_list_list:
-    timestamp = pd.Timestamp(i[0])
-    formatted_time = timestamp.strftime("%Y-%m-%dT%H:%M:%S")
-    formatted_tuple = (formatted_time, i[1], i[2])
-    formatted_tuple_list.append(formatted_tuple)
-
-# Prepare the ESL data
-esl_processor = ESLProcessor('./data/ESL-Files/')
-esl_processor.counter(esl_processor.process_files(), formatted_tuple_list)
-
-# Create a Dear PyGui context
-dpg.create_context()
-
-# set data_export_location
-def set_data_export_location(location):
-    global data_export_location
-    data_export_location = location
-
-# set data_export_URL
-def set_data_export_URL(location):
-    global data_export_URL
-    data_export_URL = location
-
 # set ESL import location
 def set_ESL_import_location(location):
     global ESL_import_location
@@ -199,6 +164,43 @@ def set_SDAT_import_location(location):
     settings_list["SDAT_import_location"] = location
     with open("./src/settings.json", "w", encoding="utf-8") as settings_file:
         json.dump(settings_list, settings_file, indent=4)
+
+with open("./src/settings.json", "r", encoding="utf-8") as settings_file:
+    settings_list = json.load(settings_file)
+    global ESL_import_location
+    global SDAT_import_location
+    ESL_import_location = settings_list["ESL_import_location"]
+    SDAT_import_location = settings_list["SDAT_import_location"]
+
+# Prepare the SDAT data
+sdat_processor = SDATProcessor(SDAT_import_location)
+sdat_processor.process_files()
+
+sdat_list_list = sdat_processor.get_data_for_plotting().reset_index().values.tolist()
+formatted_tuple_list = []
+
+for i in sdat_list_list:
+    timestamp = pd.Timestamp(i[0])
+    formatted_time = timestamp.strftime("%Y-%m-%dT%H:%M:%S")
+    formatted_tuple = (formatted_time, i[1], i[2])
+    formatted_tuple_list.append(formatted_tuple)
+
+# Prepare the ESL data
+esl_processor = ESLProcessor(ESL_import_location)
+esl_processor.counter(esl_processor.process_files(), formatted_tuple_list)
+
+# Create a Dear PyGui context
+dpg.create_context()
+
+# set data_export_location
+def set_data_export_location(location):
+    global data_export_location
+    data_export_location = location
+
+# set data_export_URL
+def set_data_export_URL(location):
+    global data_export_URL
+    data_export_URL = location
     
 # set ESL_import_location to value defined in settings.json
 with open("./src/settings.json", "r", encoding="utf-8") as settings_file:
@@ -366,6 +368,10 @@ with dpg.window(label=current_language[11]) as main_window:
             dpg.add_menu_item(label="German", callback=lambda: set_language("German"))
             dpg.add_menu_item(label="French", callback=lambda: set_language("French"))
             dpg.add_menu_item(label="Spanish", callback=lambda: set_language("Spanish"))
+
+            with dpg.group(horrizontal=True):
+                dpg.add_text(default_value="Hint: ", color=(255, 0, 0, 255))
+                dpg.add_text(default_value="Restart the application to apply changes.", color=(255, 0, 0, 255))
     
     with dpg.plot(label=current_language[10], height=-1, width=-1):
         dpg.add_plot_legend()
