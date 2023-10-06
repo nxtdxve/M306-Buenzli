@@ -1,4 +1,5 @@
-data/*
+data/SDAT-Files/*
+data/ESL-Files/*
 data_real/
 .pytest_cache
 __pycache__

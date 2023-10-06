@@ -3,12 +3,37 @@ import pandas as pd
 import json
 
 class HTTPExporter:
+    """
+    Class to export data via HTTP POST requests.
+
+    Attributes:
+        data (DataFrame): Pandas DataFrame containing the data to export.
+        endpoint_url (str): The endpoint URL where the HTTP POST request will be sent.
+        sensor_id_col (str, optional): The column name in the DataFrame that contains sensor IDs.
+    """
     def __init__(self, data, endpoint_url, sensor_id_col=None):
+        """
+        Initialize the HTTPExporter class.
+
+        Args:
+            data (DataFrame): Pandas DataFrame containing the data to export.
+            endpoint_url (str): The endpoint URL where the HTTP POST request will be sent.
+            sensor_id_col (str, optional): The column name in the DataFrame that contains sensor IDs.
+        """
         self.data = data
         self.endpoint_url = endpoint_url
         self.sensor_id_col = sensor_id_col
 
     def export(self):
+        """
+        Export the data via HTTP POST requests.
+
+        If sensor_id_col is provided, data for each sensor ID will be grouped together.
+        The data is sent to the specified endpoint URL.
+
+        Returns:
+            response: HTTP Response object
+        """
         json_output = []
 
         if self.sensor_id_col:
@@ -45,3 +70,6 @@ class HTTPExporter:
             print("Successfully posted data.")
         else:
             print(f"Failed to post data. Status code: {response.status_code}, Reason: {response.text}")
+
+        return response 
+    

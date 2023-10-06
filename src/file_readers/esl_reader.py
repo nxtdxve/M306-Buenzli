@@ -111,6 +111,13 @@ class ESLReader:
         return prod
     
     def get_values(self):
+        """
+        Get specific electricity usage and production values from the ESL file based on OBIS codes.
+        
+        Returns:
+            list: A list of tuples, where each tuple contains the end time, electricity usage and 
+                electricity production values for that time period.
+        """
         used = self.get_usage()
         produced = self.get_production()
         result = []

@@ -3,12 +3,34 @@ import json
 import pandas as pd
 
 class JSONExporter:
+    """
+    Class to export data to a JSON file.
+
+    Attributes:
+        data (DataFrame): Pandas DataFrame containing the data to export.
+        output_folder (str): The folder where the JSON file will be saved.
+        sensor_id_col (str, optional): The column name in the DataFrame that contains sensor IDs.
+    """
     def __init__(self, data, output_folder, sensor_id_col=None):
+        """
+        Initialize the JSONExporter class.
+
+        Args:
+            data (DataFrame): Pandas DataFrame containing the data to export.
+            output_folder (str): The folder where the JSON file will be saved.
+            sensor_id_col (str, optional): The column name in the DataFrame that contains sensor IDs.
+        """
         self.data = data
         self.output_folder = output_folder
         self.sensor_id_col = sensor_id_col
 
     def export(self):
+        """
+        Export the data to a JSON file.
+
+        If sensor_id_col is provided, data for each sensor ID will be grouped together.
+        The resulting JSON file is saved to the specified output folder.
+        """
         json_output = []
 
         if self.sensor_id_col:

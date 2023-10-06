@@ -7,15 +7,32 @@ import sys
 dir = os.path.dirname(os.path.realpath(__file__))
 sys.path.append(os.path.dirname(dir))
 
-# Assume this import works as in your original code
 from file_readers.sdat_reader import SDATReader
 
 class SDATProcessor:
+    """
+    Class to process SDAT (Standard Data Archive Tool) files.
+
+    Attributes:
+        folder_path (str): The path to the folder containing the SDAT files.
+        data_list (list): List to store processed data as dictionaries.
+        data (DataFrame): Pandas DataFrame to store aggregated and processed data.
+    """
+
     def __init__(self, folder_path):
+        """
+        Initialize the SDATProcessor class.
+
+        Args:
+            folder_path (str): The path to the folder containing the SDAT files.
+        """
         self.folder_path = folder_path
         self.data_list = []
 
     def process_files(self):
+        """
+        Process all SDAT files in the specified folder and populate the data DataFrame.
+        """
         files = [f for f in os.listdir(self.folder_path) if f.endswith('.xml')]
         total_files = len(files)
 
@@ -76,9 +93,24 @@ class SDATProcessor:
         self.data.sort_index(inplace=True)
 
     def get_data_for_plotting(self):
+        """
+        Retrieve processed data suitable for plotting.
+
+        Returns:
+            DataFrame: A Pandas DataFrame containing processed data.
+        """
         return self.data
 
     def process_value_list(self, values):
+        """
+        Process a list of values to calculate their non-zero mean.
+
+        Args:
+            values (list): A list of numerical values.
+
+        Returns:
+            float: The non-zero mean of the list values.
+        """
         if not values:
             return 0
         non_zero_values = [x for x in values if x != 0]
@@ -87,6 +119,19 @@ class SDATProcessor:
         return np.mean(non_zero_values)  # Take average of all non-zero numbers
 
     def print_progress_bar(self, iteration, total, prefix='', suffix='', decimals=1, length=100, fill='█', print_end="\r"):
+        """
+        Display a progress bar in the console.
+
+        Args:
+            iteration (int): Current iteration number.
+            total (int): Total number of iterations.
+            prefix (str): Prefix string to be displayed before the progress bar.
+            suffix (str): Suffix string to be displayed after the progress bar.
+            decimals (int): Number of decimal places to show the percentage to.
+            length (int): Length of the progress bar.
+            fill (str): Character to fill the progress bar with.
+            print_end (str): End character to print at the end of the progress bar.
+        """
         percent = ("{0:." + str(decimals) + "f}").format(100 * (iteration / float(total)))
         filled_length = int(length * iteration // total)
         bar = fill * filled_length + '-' * (length - filled_length)
