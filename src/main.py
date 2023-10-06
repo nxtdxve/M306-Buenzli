@@ -35,10 +35,10 @@ if __name__ == '__main__':
 """
 
 definitions = [
-    ["Export as", "Settings", "Choose data source", "Usage data", "Counter data", "Consumption", "Production", "Time", "directory selection SDAT import", "directory selection ESL import", "Consumption and Production", "Energy Data Visualization", "Light Mode"],
-    ["Exportieren als", "Einstellungen", "Datenquelle auswählen", "Verbrauchsdaten", "Stromzählerdaten", "Verbrauch", "Produktion", "Zeit", "Verzeichnis für Verbrauchsdaten auswählen", "Verzeichnis für Stromzähler auswählen", "Verbrauch und Produktion", "Energiedaten Visualisierung", "Heller Modus"],
-    ["Exporter comme", "Paramètres", "Source de données", "Données de consommation", "Données de compteur", "Consommation", "Production", "Temps", "Répertoire pour les données de consommation", "Répertoire pour les données de compteur", "Consommation et production", "Visualisation des données énergétiques", "Mode clair"],
-    ["Exportar como", "Configuración", "Fuente de datos", "Datos de consumo", "Datos del contador", "Consumo", "Producción", "Tiempo", "Directorio para los datos de consumo", "Directorio para los datos del contador", "Consumo y producción", "Visualización de datos energéticos", "Modo claro"]
+    ["Export as", "Settings", "Choose data source", "Usage data", "Counter data", "Consumption", "Production", "Time", "directory selection SDAT import", "directory selection ESL import", "Consumption and Production", "Energy Data Visualization", "Light Mode", "Hint: Restart the application to apply changes."],
+    ["Exportieren als", "Einstellungen", "Datenquelle auswählen", "Verbrauchsdaten", "Stromzählerdaten", "Verbrauch", "Produktion", "Zeit", "Verzeichnis für Verbrauchsdaten auswählen", "Verzeichnis für Stromzähler auswählen", "Verbrauch und Produktion", "Energiedaten Visualisierung", "Heller Modus", "Hinweis: Starten Sie die Anwendung neu, um die Änderungen zu übernehmen."],
+    ["Exporter comme", "Paramètres", "Source de données", "Données de consommation", "Données de compteur", "Consommation", "Production", "Temps", "Répertoire pour les données de consommation", "Répertoire pour les données de compteur", "Consommation et production", "Visualisation des données énergétiques", "Mode clair", "Astuce: Redémarrez l'application pour appliquer les modifications."],
+    ["Exportar como", "Configuración", "Fuente de datos", "Datos de consumo", "Datos del contador", "Consumo", "Producción", "Tiempo", "Directorio para los datos de consumo", "Directorio para los datos del contador", "Consumo y producción", "Visualización de datos energéticos", "Modo claro", "Consejo: Reinicie la aplicación para aplicar los cambios."]
 ]
 
 english = definitions[0]
@@ -165,6 +165,28 @@ def set_SDAT_import_location(location):
     with open("./src/settings.json", "w", encoding="utf-8") as settings_file:
         json.dump(settings_list, settings_file, indent=4)
 
+def reload_processor_ESL():
+    with open("./src/settings.json", "r", encoding="utf-8") as settings_file:
+        settings_list = json.load(settings_file)
+    global ESL_import_location
+    global esl_processor
+
+    ESL_import_location = settings_list["ESL_import_location"]
+
+    esl_processor = ESLProcessor(ESL_import_location)
+    esl_processor.counter(esl_processor.process_files(), formatted_tuple_list)
+
+def reload_processor_SDAT():
+    with open("./src/settings.json", "r", encoding="utf-8") as settings_file:
+        settings_list = json.load(settings_file)
+    global SDAT_import_location
+    global sdat_processor
+
+    SDAT_import_location = settings_list["SDAT_import_location"]
+
+    sdat_processor = SDATProcessor(SDAT_import_location)
+    sdat_processor.process_files()
+
 with open("./src/settings.json", "r", encoding="utf-8") as settings_file:
     settings_list = json.load(settings_file)
     global ESL_import_location
@@ -173,6 +195,7 @@ with open("./src/settings.json", "r", encoding="utf-8") as settings_file:
     SDAT_import_location = settings_list["SDAT_import_location"]
 
 # Prepare the SDAT data
+global sdat_processor
 sdat_processor = SDATProcessor(SDAT_import_location)
 sdat_processor.process_files()
 
@@ -186,6 +209,7 @@ for i in sdat_list_list:
     formatted_tuple_list.append(formatted_tuple)
 
 # Prepare the ESL data
+global esl_processor
 esl_processor = ESLProcessor(ESL_import_location)
 esl_processor.counter(esl_processor.process_files(), formatted_tuple_list)
 
@@ -216,12 +240,14 @@ def call(sender, app_data):
             if sender == "SDAT_import":
                 combo_id_items = dpg.get_item_configuration("combo_id")["items"]
                 set_SDAT_import_location(app_data["file_path_name"])
+                reload_processor_SDAT()
                 dpg.configure_item("combo_id", items=[current_language[3], combo_id_items[1]], default_value=current_language[3], callback=update_data)
                 update_data("combo_id", None)
 
             elif sender == "ESL_import":
                 combo_id_items = dpg.get_item_configuration("combo_id")["items"]
                 set_ESL_import_location(app_data["file_path_name"])
+                reload_processor_ESL()
                 dpg.configure_item("combo_id", items=[combo_id_items[0], current_language[4]], default_value=combo_id_items[0], callback=update_data)
                 update_data("combo_id", None)
 
@@ -247,18 +273,10 @@ def export_csv(sender, app_data):
         data = esl_processor.get_data_for_plotting()
 
     elif option == current_language[3]:
-        new_esl_processor = ESLProcessor(ESL_import_location)
-        new_esl_processor.counter(new_esl_processor.process_files(), formatted_tuple_list)
-        data = new_esl_processor.get_data_for_plotting_counter()
-        dpg.fit_axis_data(y_axis)
-        get_data_min_max(data)
+        data = esl_processor.get_data_for_plotting_counter()
 
     elif option == current_language[4]:
-        new_esl_processor = ESLProcessor(ESL_import_location)
-        new_esl_processor.counter(new_esl_processor.process_files(), formatted_tuple_list)
-        data = new_esl_processor.get_data_for_plotting_counter()
-        dpg.fit_axis_data(y_axis)
-        get_data_min_max(data)
+        data = esl_processor.get_data_for_plotting_counter()
     
     csv_exporter = CSVExporter(data, data_export_location)
     csv_exporter.export()
@@ -273,18 +291,10 @@ def export_json(sender, app_data):
         data = esl_processor.get_data_for_plotting()
 
     elif option == current_language[3]:
-        new_esl_processor = ESLProcessor(ESL_import_location)
-        new_esl_processor.counter(new_esl_processor.process_files(), formatted_tuple_list)
-        data = new_esl_processor.get_data_for_plotting_counter()
-        dpg.fit_axis_data(y_axis)
-        get_data_min_max(data)
+        data = esl_processor.get_data_for_plotting_counter()
 
     elif option == current_language[4]:
-        new_esl_processor = ESLProcessor(ESL_import_location)
-        new_esl_processor.counter(new_esl_processor.process_files(), formatted_tuple_list)
-        data = new_esl_processor.get_data_for_plotting_counter()
-        dpg.fit_axis_data(y_axis)
-        get_data_min_max(data)
+        data = esl_processor.get_data_for_plotting_counter()
     
     json_exporter = JSONExporter(data, data_export_location)
     json_exporter.export()
@@ -297,21 +307,13 @@ def export_http(sender, app_data):
         data = sdat_processor.get_data_for_plotting()
 
     elif option == "ESL":
-        data = esl_processor.get_data_for_plotting()
+        data = esl_processor.get_data_for_plotting_counter()
 
     elif option == current_language[3]:
-        new_esl_processor = ESLProcessor(ESL_import_location)
-        new_esl_processor.counter(new_esl_processor.process_files(), formatted_tuple_list)
-        data = new_esl_processor.get_data_for_plotting_counter()
-        dpg.fit_axis_data(y_axis)
-        get_data_min_max(data)
+        data = esl_processor.get_data_for_plotting_counter()
 
     elif option == current_language[4]:
-        new_esl_processor = ESLProcessor(ESL_import_location)
-        new_esl_processor.counter(new_esl_processor.process_files(), formatted_tuple_list)
-        data = new_esl_processor.get_data_for_plotting_counter()
-        dpg.fit_axis_data(y_axis)
-        get_data_min_max(data)
+        data = esl_processor.get_data_for_plotting_counter()
     
     http_exporter = HTTPExporter(data, data_export_URL)
     
@@ -369,9 +371,8 @@ with dpg.window(label=current_language[11]) as main_window:
             dpg.add_menu_item(label="French", callback=lambda: set_language("French"))
             dpg.add_menu_item(label="Spanish", callback=lambda: set_language("Spanish"))
 
-            with dpg.group(horrizontal=True):
-                dpg.add_text(default_value="Hint: ", color=(255, 0, 0, 255))
-                dpg.add_text(default_value="Restart the application to apply changes.", color=(255, 0, 0, 255))
+            with dpg.group(horizontal=True):
+                dpg.add_text(default_value=current_language[13], color=(255, 0, 0, 255))
     
     with dpg.plot(label=current_language[10], height=-1, width=-1):
         dpg.add_plot_legend()
