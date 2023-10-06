@@ -2,22 +2,11 @@
 For the Modul 306 in BZZ. It allows Energieagentur Bünzli to efficiently manage the data from the electricity meters of the swiss power grid by visualising the data. The software is capable to read sdat- and ESL-Files and display the data in a graph. The software is also capable to export the data in a CSV-File and a JSON-File and can load the Data with http POST on a server. The software is written in Python and uses tkinter for the GUI.
 
 ## Table of Contents
-
-<<<<<<< HEAD
-- [M306-Buenzli](#m306-buenzli)
-  - [Table of Contents](#table-of-contents)
-  - [Features](#features)
-  - [Usage](#usage)
-  - [How to use](#how-to-use)
-  - [Technologies Used](#technologies-used)
-  - [License](#license)
-=======
 - [Features](#features)
 - [Usage](#usage)
 - [How to use](#how_to_use)
 - [Technologies Used](#technologies-used)
 - [License](#license)
->>>>>>> e9a3ec7830e7f108fa3be38710953079676d04f6
 
 ## Features
 - Read sdat-Files
@@ -39,7 +28,7 @@ For the Modul 306 in BZZ. It allows Energieagentur Bünzli to efficiently manage
  ```bash
    git clone git@github.com:nxtdxve/M306-Buenzli.git
 ```
- Open the project in a virtual environment. Put the sdat- and ESL-Files in the data directory if this is the first time you're using the software. If you changed the language you'll have to restart the software.
+ Open the project in a virtual environment. Put the SDAT-Files and ESL-Files in the data direcotry, which needs to be located in the root directory of the project, if this is the first time you're using the software. If you changed the language you'll have to restart the software.
 
 ## Technologies Used
 - Python
