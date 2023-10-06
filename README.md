@@ -3,6 +3,7 @@ For the Modul 306 in BZZ. It allows Energieagentur Bünzli to efficiently manage
 
 ## Table of Contents
 
+<<<<<<< HEAD
 - [M306-Buenzli](#m306-buenzli)
   - [Table of Contents](#table-of-contents)
   - [Features](#features)
@@ -10,6 +11,13 @@ For the Modul 306 in BZZ. It allows Energieagentur Bünzli to efficiently manage
   - [How to use](#how-to-use)
   - [Technologies Used](#technologies-used)
   - [License](#license)
+=======
+- [Features](#features)
+- [Usage](#usage)
+- [How to use](#how_to_use)
+- [Technologies Used](#technologies-used)
+- [License](#license)
+>>>>>>> e9a3ec7830e7f108fa3be38710953079676d04f6
 
 ## Features
 - Read sdat-Files
